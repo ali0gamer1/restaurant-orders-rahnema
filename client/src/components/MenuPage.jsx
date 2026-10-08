@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
 import MenuForm from './MenuForm';
+import MenuHeader from './UnnecessaryMenuHeader';
 import MenuRow from './MenuRow';
 
 export default function MenuPage() {
@@ -62,14 +63,8 @@ export default function MenuPage() {
         <p>Loading menu...</p>
       ) : (
         <table>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Price</th>
-              <th></th>
-            </tr>
-          </thead>
+          <MenuHeader />
+          
           <tbody>
             {items.map((item) => (
               <MenuRow
