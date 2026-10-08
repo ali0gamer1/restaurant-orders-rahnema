@@ -1,110 +1,62 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
-
-const emptyForm = { name: '', price: '' };
+import MenuForm from './MenuForm';
+import MenuRow from './MenuRow';
 
 export default function MenuPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  //const [error, setMessage] = useState('');
-  const [errorFlag, setErrorFlag] = useState(false);
-  const [message, setMessage] = useState('');
-  const [form, setForm] = useState(emptyForm);
+  const [error, setError] = useState('');
   const [editingId, setEditingId] = useState(null);
-  const [editForm, setEditForm] = useState(emptyForm);
 
-  function loadMenu() {
-    setLoading(true);
+  useEffect(() => {
     api
       .getMenu()
       .then(setItems)
-      .catch((err) => {
-        setMessage(err.message);
-        setErrorFlag(true);
-      })
+      .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }
+  }, []);
 
-  useEffect(loadMenu, []);
-
-  function handleCreate(e) {
-    e.preventDefault();
-    setMessage('');
-    setErrorFlag(false);
-    api
-      .createMenuItem({ name: form.name, price: Number(form.price) })
-      .then((item) => {
-        setItems((prev) => [...prev, item]);
-        setForm(emptyForm);
-      })
+  // Handlers re-throw so the form knows whether to reset/close.
+  function handleCreate(data) {
+    setError('');
+    return api
+      .createMenuItem(data)
+      .then((item) => setItems((prev) => [...prev, item]))
       .catch((err) => {
-        setMessage(err.message);
-        setErrorFlag(true);
+        setError(err.message);
+        throw err;
       });
   }
 
-  function startEdit(item) {
-    setEditingId(item.id);
-    setEditForm({ name: item.name, price: String(item.price) });
-  }
-
-  function cancelEdit() {
-    setEditingId(null);
-    setEditForm(emptyForm);
-  }
-
-  function handleUpdate(e, id) {
-    e.preventDefault();
-    setMessage('');
-    setErrorFlag(false);
-    api
-      .updateMenuItem(id, { name: editForm.name, price: Number(editForm.price) })
+  function handleUpdate(id, data) {
+    setError('');
+    return api
+      .updateMenuItem(id, data)
       .then((updated) => {
         setItems((prev) => prev.map((it) => (it.id === id ? updated : it)));
-        cancelEdit();
+        setEditingId(null);
       })
       .catch((err) => {
-        setMessage(err.message);
-        setErrorFlag(true);
+        setError(err.message);
+        throw err;
       });
   }
 
   function handleDelete(id) {
-    setMessage('');
-    setErrorFlag(false);
+    setError('');
     api
       .deleteMenuItem(id)
       .then(() => setItems((prev) => prev.filter((it) => it.id !== id)))
-      .catch((err) => {
-        setMessage(err.message);
-        setErrorFlag(true);
-      });
+      .catch((err) => setError(err.message));
   }
 
   return (
     <section>
       <h2>Menu</h2>
-      {message && <p className={errorFlag ? "error" : "message"}>{message}</p>}
-      
-      
+      {error && <p className="error">{error}</p>}
 
-      <form className="inline-form" onSubmit={handleCreate}>
-        <input
-          placeholder="Dish name"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          required
-        />
-        <input
-          type="number"
-          step="0.01"
-          placeholder="Price"
-          value={form.price}
-          onChange={(e) => setForm({ ...form, price: e.target.value })}
-          required
-        />
-        <button type="submit">Add item</button>
-      </form>
+      <MenuForm submitLabel="Add item" onSubmit={handleCreate} resetOnSuccess />
 
       {loading ? (
         <p>Loading menu...</p>
@@ -119,44 +71,17 @@ export default function MenuPage() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item) =>
-              editingId === item.id ? (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td colSpan={2}>
-                    <form className="inline-form" onSubmit={(e) => handleUpdate(e, item.id)}>
-                      <input
-                        value={editForm.name}
-                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                        required
-                      />
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={editForm.price}
-                        onChange={(e) => setEditForm({ ...editForm, price: e.target.value })}
-                        required
-                      />
-                      <button type="submit">Save</button>
-                      <button type="button" onClick={cancelEdit}>
-                        Cancel
-                      </button>
-                    </form>
-                  </td>
-                  <td></td>
-                </tr>
-              ) : (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.name}</td>
-                  <td>${item.price.toFixed(2)}</td>
-                  <td>
-                    <button onClick={() => startEdit(item)}>Edit</button>
-                    <button onClick={() => handleDelete(item.id)}>Delete</button>
-                  </td>
-                </tr>
-              )
-            )}
+            {items.map((item) => (
+              <MenuRow
+                key={item.id}
+                item={item}
+                isEditing={editingId === item.id}
+                onEdit={() => setEditingId(item.id)}
+                onCancel={() => setEditingId(null)}
+                onSave={(data) => handleUpdate(item.id, data)}
+                onDelete={() => handleDelete(item.id)}
+              />
+            ))}
             {items.length === 0 && (
               <tr>
                 <td colSpan={4}>No menu items yet.</td>

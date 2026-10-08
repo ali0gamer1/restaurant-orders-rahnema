@@ -87,7 +87,9 @@ client/
     api.js                 fetch wrapper for every endpoint
     components/
       HealthBadge.jsx      shows API status
-      MenuPage.jsx         menu CRUD
+      MenuPage.jsx         menu page: owns items state and API calls
+      MenuForm.jsx         reusable add/edit form (own input state)
+      MenuRow.jsx          one table row, switches to MenuForm when editing
       OrdersPage.jsx       token input, place order, orders table
       ReservationsPage.jsx shows the "not implemented" response
 ```
@@ -117,7 +119,7 @@ Data that changes over time is kept in **state**. When state is updated, React r
 const [activeTab, setActiveTab] = useState('menu');
 ```
 
-Clicking a tab calls `setActiveTab(...)`; React re-renders `App` and shows a different page. Because each page component is unmounted when you switch away, its state is discarded and it reloads its data when shown again. Forms use the same idea: each input's `value` comes from state and `onChange` updates it (a "controlled input"). `MenuPage` keeps `items`, `form`, `editingId`, `loading` and `error` in state.
+Clicking a tab calls `setActiveTab(...)`; React re-renders `App` and shows a different page. Because each page component is unmounted when you switch away, its state is discarded and it reloads its data when shown again. Forms use the same idea: each input's `value` comes from state and `onChange` updates it (a "controlled input"). `MenuPage` keeps `items`, `editingId`, `loading` and `error` in state, while `MenuForm` keeps its own input values, so typing doesn't re-render the whole page.
 
 ### 3. Side effects with `useEffect`
 
@@ -161,6 +163,5 @@ The Orders page stores the kitchen token in `localStorage` and sends it as `Auth
 ## Learning ideas
 
 - Add a "mark as served" button (the `OrderQueue.serve` method exists but has no route yet).
-- Split `MenuPage` into smaller components (`MenuForm`, `MenuRow`).
 - Replace the tab state with React Router.
 - Move shared state (menu items) into a context or a data-fetching library.
