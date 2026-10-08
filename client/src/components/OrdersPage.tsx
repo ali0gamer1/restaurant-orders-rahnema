@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
+import type { FormEvent } from 'react';
 import { api } from '../api';
+import type { MenuItem, Order, OrderSize } from '../types';
 
 export default function OrdersPage() {
   const [token, setToken] = useState(() => localStorage.getItem('apiToken') || '');
-  const [menu, setMenu] = useState([]);
-  const [orders, setOrders] = useState([]);
+  const [menu, setMenu] = useState<MenuItem[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [menuItemId, setMenuItemId] = useState('');
-  const [size, setSize] = useState('medium');
+  const [size, setSize] = useState<OrderSize>('medium');
   //const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [errorFlag, setErrorFlag] = useState(false);
@@ -16,7 +18,7 @@ export default function OrdersPage() {
     api.getMenu().then(setMenu).catch(() => {});
   }, []);
 
-  function saveToken(value) {
+  function saveToken(value: string) {
     setToken(value);
     localStorage.setItem('apiToken', value);
   }
@@ -45,7 +47,7 @@ export default function OrdersPage() {
       .finally(() => setLoading(false));
   }
 
-  function handleCreate(e) {
+  function handleCreate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!token) {
       setMessage('Enter the kitchen API token first.');
@@ -96,7 +98,7 @@ export default function OrdersPage() {
             </option>
           ))}
         </select>
-        <select value={size} onChange={(e) => setSize(e.target.value)}>
+        <select value={size} onChange={(e) => setSize(e.target.value as OrderSize)}>
           <option value="small">small</option>
           <option value="medium">medium</option>
           <option value="large">large</option>

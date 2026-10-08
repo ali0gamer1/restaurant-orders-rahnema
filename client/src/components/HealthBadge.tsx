@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../api';
 
 export default function HealthBadge() {
-  const [status, setStatus] = useState('checking...');
+  const [status, setStatus] = useState<string>('checking...');
 
   useEffect(() => {
     let cancelled = false;

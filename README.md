@@ -79,26 +79,27 @@ src/
 
 ```
 client/
-  vite.config.js           dev server + proxy to the backend
+  vite.config.ts           dev server + proxy to the backend
   index.html               page with <div id="root">
   src/
-    main.jsx               mounts <App /> into #root
-    App.jsx                header, tab navigation, picks the active page
-    api.js                 fetch wrapper for every endpoint
+    main.tsx               mounts <App /> into #root
+    App.tsx                header, tab navigation, picks the active page
+    api.ts                 typed fetch wrapper for every endpoint
+    types.ts               shared types (MenuItem, Order, ...)
     components/
-      HealthBadge.jsx      shows API status
-      MenuPage.jsx         menu page: owns items state and API calls
-      MenuForm.jsx         reusable add/edit form (own input state)
-      MenuRow.jsx          one table row, switches to MenuForm when editing
-      OrdersPage.jsx       token input, place order, orders table
-      ReservationsPage.jsx shows the "not implemented" response
+      HealthBadge.tsx      shows API status
+      MenuPage.tsx         menu page: owns items state and API calls
+      MenuForm.tsx         reusable add/edit form (own input state)
+      MenuRow.tsx          one table row, switches to MenuForm when editing
+      OrdersPage.tsx       token input, place order, orders table
+      ReservationsPage.tsx shows the "not implemented" response
 ```
 
 ## How React works in this project
 
 ### 1. Entry point and components
 
-`index.html` contains an empty `<div id="root">`. [`main.jsx`](client/src/main.jsx) tells React to render `<App />` inside it. After that, React owns the contents of that div.
+`index.html` contains an empty `<div id="root">`. [`main.tsx`](client/src/main.tsx) tells React to render `<App />` inside it. After that, React owns the contents of that div.
 
 The UI is a tree of **components**: plain functions that return JSX (HTML-like syntax).
 
@@ -113,7 +114,7 @@ App
 
 ### 2. State with `useState`
 
-Data that changes over time is kept in **state**. When state is updated, React re-renders the component and updates the DOM to match. For example, in [`App.jsx`](client/src/App.jsx):
+Data that changes over time is kept in **state**. When state is updated, React re-renders the component and updates the DOM to match. For example, in [`App.tsx`](client/src/App.tsx):
 
 ```jsx
 const [activeTab, setActiveTab] = useState('menu');
@@ -135,7 +136,7 @@ useEffect(() => {
 
 ### 4. Talking to the API
 
-All HTTP calls are in [`api.js`](client/src/api.js). Components call `api.getMenu()`, `api.createOrder(token, ...)`, etc. and update state with the result. On a failed response the wrapper throws an `Error` with the backend's message, which components show in an error box.
+All HTTP calls are in [`api.ts`](client/src/api.ts). Components call `api.getMenu()`, `api.createOrder(token, ...)`, etc. and update state with the result. On a failed response the wrapper throws an `Error` with the backend's message, which components show in an error box.
 
 A typical flow (adding a menu item):
 
@@ -152,7 +153,7 @@ Tables are built with `items.map(...)`, where each row has a `key` so React can 
 
 ### 6. Vite and the dev proxy
 
-[Vite](https://vite.dev) serves the React app on port 5173 and compiles JSX on the fly with hot reload. The browser would normally block calls from port 5173 to the API on port 3000 (CORS), so [`vite.config.js`](client/vite.config.js) proxies `/health`, `/menu`, `/orders` and `/reservations` to `http://localhost:3000`. The frontend just calls relative URLs like `fetch('/menu')`, and no backend CORS setup is needed.
+[Vite](https://vite.dev) serves the React app on port 5173 and compiles JSX on the fly with hot reload. The browser would normally block calls from port 5173 to the API on port 3000 (CORS), so [`vite.config.ts`](client/vite.config.ts) proxies `/health`, `/menu`, `/orders` and `/reservations` to `http://localhost:3000`. The frontend just calls relative URLs like `fetch('/menu')`, and no backend CORS setup is needed.
 
 This proxy only exists in the dev server. For production, you would run `npm --prefix client run build` and serve `client/dist` behind the same host as the API (or add CORS).
 

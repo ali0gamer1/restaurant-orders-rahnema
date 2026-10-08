@@ -13,7 +13,7 @@ const TABS = [
 
 function App() {
   const [activeTab, setActiveTab] = useState(TABS[0].id);
-  const Active = TABS.find((tab) => tab.id === activeTab).Component;
+  const Active = TABS.find((tab) => tab.id === activeTab)!.Component;
 
   return (
     <div className="app">

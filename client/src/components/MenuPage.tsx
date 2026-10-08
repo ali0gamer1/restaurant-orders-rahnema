@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
+import type { MenuItem, MenuItemInput } from '../types';
 import MenuForm from './MenuForm';
 import MenuHeader from './UnnecessaryMenuHeader';
 import MenuRow from './MenuRow';
 
 export default function MenuPage() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [editingId, setEditingId] = useState(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
     api
@@ -19,7 +20,7 @@ export default function MenuPage() {
   }, []);
 
   // Handlers re-throw so the form knows whether to reset/close.
-  function handleCreate(data) {
+  function handleCreate(data: MenuItemInput) {
     setError('');
     return api
       .createMenuItem(data)
@@ -30,7 +31,7 @@ export default function MenuPage() {
       });
   }
 
-  function handleUpdate(id, data) {
+  function handleUpdate(id: number, data: MenuItemInput) {
     setError('');
     return api
       .updateMenuItem(id, data)
@@ -44,7 +45,7 @@ export default function MenuPage() {
       });
   }
 
-  function handleDelete(id) {
+  function handleDelete(id: number) {
     setError('');
     api
       .deleteMenuItem(id)
@@ -73,7 +74,7 @@ export default function MenuPage() {
                 isEditing={editingId === item.id}
                 onEdit={() => setEditingId(item.id)}
                 onCancel={() => setEditingId(null)}
-                onSave={(data) => handleUpdate(item.id, data)}
+                onSave={(data: MenuItemInput) => handleUpdate(item.id, data)}
                 onDelete={() => handleDelete(item.id)}
               />
             ))}

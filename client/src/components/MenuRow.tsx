@@ -1,6 +1,16 @@
 import MenuForm from './MenuForm';
+import type { MenuItem, MenuItemInput } from '../types';
 
-export default function MenuRow({ item, isEditing, onEdit, onCancel, onSave, onDelete }) {
+interface MenuRowProps {
+  item: MenuItem;
+  isEditing: boolean;
+  onEdit: () => void;
+  onCancel: () => void;
+  onSave: (data: MenuItemInput) => Promise<unknown>;
+  onDelete: () => void;
+}
+
+export default function MenuRow({ item, isEditing, onEdit, onCancel, onSave, onDelete }: MenuRowProps) {
   if (isEditing) {
     return (
       <tr>
