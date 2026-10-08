@@ -115,6 +115,7 @@ export default function OrdersPage() {
               <th>Size</th>
               <th>Price</th>
               <th>Served</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -125,11 +126,21 @@ export default function OrdersPage() {
                 <td>{order.size}</td>
                 <td>${order.price.toFixed(2)}</td>
                 <td>{order.served ? 'Yes' : 'No'}</td>
+                <td >
+                  {!order.served && (
+                    <button onClick={() => api.serve(token, order.id).then(loadOrders).catch((err) => {
+                      setMessage(err.message);
+                      setErrorFlag(true);
+                    })}>
+                      Serve
+                    </button>
+                  )}
+                </td>
               </tr>
             ))}
             {orders.length === 0 && (
               <tr>
-                <td colSpan={5}>No orders loaded yet.</td>
+                <td colSpan={6}>No orders loaded yet.</td>
               </tr>
             )}
           </tbody>

@@ -40,4 +40,9 @@ export const api = {
     }),
 
   getReservations: () => request('/reservations'),
+
+  //set data for serving an order
+  serve: (token,orderId) => request(`/orders/serve`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: JSON.stringify({ orderId }) }),
+
+
 };

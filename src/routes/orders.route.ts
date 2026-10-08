@@ -17,6 +17,27 @@ export function createOrdersRouter(orderQueue: OrderQueue, menuDb: InMemoryDb<Me
 
     });
     
+    ordersRouter.post('/serve', (req: Request, res: Response) => {
+        const body = req.body;
+
+        if (!body || Object.keys(body).length === 0) {
+            return InvalidDataError(res, 'Invalid serve data', 'INVALID_SERVE_DATA');
+        }
+
+        const orderId = Number(body.orderId);
+        if (isNaN(orderId)) {
+            return InvalidDataError(res, 'Invalid orderId', 'INVALID_ORDER_ID');
+        }
+
+        try {
+            orderQueue.serve(orderId);
+            return res.status(200).json({ message: 'Order served successfully' });
+        } catch (error) {
+            return res.status(409).json({ error: { message: error instanceof Error ? error.message : String(error), code: 'ORDER_SERVE_FAILED' } });
+        }
+    });
+    
+
     ordersRouter.post('/', (req: Request, res: Response) => {
     
         const body = req.body;
