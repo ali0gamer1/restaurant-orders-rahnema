@@ -1,0 +1,109 @@
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: system-ui, sans-serif;
+  color: #222;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.health-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  background: #eee;
+}
+
+.health-badge--ok {
+  background: #d4f7dc;
+  color: #116329;
+}
+
+.health-badge--offline {
+  background: #fbdada;
+  color: #8a1f1f;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.5rem 0 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  border-bottom: 2px solid transparent;
+}
+
+.tab--active {
+  border-bottom-color: #3366ff;
+  font-weight: 600;
+}
+
+.inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+button {
+  cursor: pointer;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #f7f7f7;
+}
+
+button:hover {
+  background: #eee;
+}
+
+input,
+select {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.error {
+  color: #8a1f1f;
+  background: #fbdada;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.note {
+  color: #666;
+  font-style: italic;
+}
+
+.message {
+  color: #116329;
+  background: #d4f7dc;
+  padding: 0.5rem;
+  border-radius: 4px;
+}

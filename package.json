@@ -1,0 +1,35 @@
+{
+  "name": "s06-restaurant-orders",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts",
+    "client": "npm --prefix client run dev",
+    "client:install": "npm --prefix client install",
+    "test": "vitest run",
+    "test:1": "vitest run level-1",
+    "test:2": "vitest run level-1 level-2",
+    "test:3": "vitest run level-1 level-2 level-3",
+    "test:4": "vitest run level-1 level-2 level-3 level-4",
+    "test:5": "vitest run level-1 level-2 level-3 level-4 level-5",
+    "test:6": "vitest run level-1 level-2 level-3 level-4 level-5 level-6",
+    "test:7": "vitest run level-1 level-2 level-3 level-4 level-5 level-6 level-7",
+    "dev:all": "concurrently -n api,web -c blue,green \"npm run dev\" \"npm run client\""
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.4",
+    "concurrently": "^10.0.5",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.6",
+    "express": "^5.2.1"
+  }
+}
